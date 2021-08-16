@@ -204,7 +204,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIGestureRecogni
         case .began, .changed:
             messagesCollectionView.showsVerticalScrollIndicator = false
             let translation = gesture.translation(in: view)
-            let minX = -(view.frame.size.width * 0.35)
+            let minX = -(largestVisibleTimestampMaxX() - view.frame.size.width + 10)
             let maxX: CGFloat = 0
             var offsetValue = translation.x
             offsetValue = max(offsetValue, minX)
@@ -218,6 +218,16 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIGestureRecogni
         default:
             break
         }
+    }
+
+    private func largestVisibleTimestampMaxX() -> CGFloat {
+        let maxX = self.messagesCollectionView
+            .visibleCells
+            .compactMap { $0 as? MessageContentCell }
+            .map(\.messageTimestampLabel.frame.maxX)
+            .sorted(by: >)
+            .first
+        return maxX ?? .zero
     }
 
     private func setupDefaults() {
