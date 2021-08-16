@@ -356,9 +356,11 @@ open class MessageContentCell: MessageCollectionViewCell {
     ///  Positions the message bubble's time label.
     /// - attributes: The `MessagesCollectionViewLayoutAttributes` for the cell.
     open func layoutTimeLabelView(with attributes: MessagesCollectionViewLayoutAttributes) {
-        let paddingLeft: CGFloat = 10
+        let paddingLeft: CGFloat = attributes.messageTimeLabelHorizontalPadding
         let origin = CGPoint(x: UIScreen.main.bounds.width + paddingLeft,
-                             y: messageContainerView.frame.minY + messageContainerView.frame.height * 0.5 - messageTimestampLabel.font.ascender * 0.5)
+                             y: messageContainerView.frame.minY
+                                + messageContainerView.frame.height * 0.5
+                                - messageTimestampLabel.font.ascender * 0.5)
         let size = CGSize(width: attributes.messageTimeLabelSize.width, height: attributes.messageTimeLabelSize.height)
         messageTimestampLabel.frame = CGRect(origin: origin, size: size)
     }

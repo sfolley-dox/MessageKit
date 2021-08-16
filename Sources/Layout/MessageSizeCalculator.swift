@@ -82,6 +82,7 @@ open class MessageSizeCalculator: CellSizeCalculator {
         attributes.cellTopLabelAlignment = cellTopLabelAlignment(for: message)
         attributes.cellBottomLabelSize = cellBottomLabelSize(for: message, at: indexPath)
         attributes.messageTimeLabelSize = messageTimeLabelSize(for: message, at: indexPath)
+        attributes.messageTimeLabelHorizontalPadding = messageTimeLabelHorizontalPadding(for: message, at: indexPath)
         attributes.cellBottomLabelAlignment = cellBottomLabelAlignment(for: message)
         attributes.messageTopLabelSize = messageTopLabelSize(for: message, at: indexPath)
         attributes.messageTopLabelAlignment = messageTopLabelAlignment(for: message)
@@ -208,6 +209,12 @@ open class MessageSizeCalculator: CellSizeCalculator {
         }
         let size = attributedText.size()
         return CGSize(width: size.width, height: size.height)
+    }
+
+    open func messageTimeLabelHorizontalPadding(for message: MessageType, at indexPath: IndexPath) -> CGFloat {
+        let layoutDelegate = messagesLayout.messagesLayoutDelegate
+        let collectionView = messagesLayout.messagesCollectionView
+        return layoutDelegate.timestampLabelHorizontalPadding(for: message, at: indexPath, in: collectionView)
     }
 
     // MARK: - Bottom cell Label

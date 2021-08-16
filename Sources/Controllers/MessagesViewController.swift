@@ -204,7 +204,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIGestureRecogni
         case .began, .changed:
             messagesCollectionView.showsVerticalScrollIndicator = false
             let translation = gesture.translation(in: view)
-            let minX = -(view.frame.size.width * 0.35)
+            let minX = minXForPanGesture()
             let maxX: CGFloat = 0
             var offsetValue = translation.x
             offsetValue = max(offsetValue, minX)
@@ -218,6 +218,28 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIGestureRecogni
         default:
             break
         }
+    }
+
+    private func minXForPanGesture() -> CGFloat {
+        guard let referenceCell = visibleCellWithLargestTimeLabelMaxX() else {
+            return .zero
+        }
+
+        let timestampLabel = referenceCell.messageTimestampLabel
+        let cellContextMaxX = referenceCell.contentView.frame.maxX
+        let timestampLabelMinX = timestampLabel.frame.minX
+        let padding = timestampLabelMinX - cellContextMaxX
+        return -(timestampLabel.frame.maxX - view.frame.size.width + padding)
+    }
+
+    private func visibleCellWithLargestTimeLabelMaxX() -> MessageContentCell? {
+        return self.messagesCollectionView
+            .visibleCells
+            .compactMap { $0 as? MessageContentCell }
+            .sorted {
+                $0.messageTimestampLabel.frame.maxX > $1.messageTimestampLabel.frame.maxX
+            }
+            .first
     }
 
     private func setupDefaults() {
